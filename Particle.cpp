@@ -156,4 +156,41 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     
     m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);
     
+    m_vx = (rand() % 401) + 100; 
+    m_vy = (rand() % 401) + 100;
+    if(rand() % 2 != 0)
+    {
+        m_vx *= -1;
+    }
+    
+    m_color1 = Color(255, 255, 0);
+    m_color2 = Color(147, 197, 114);
+
+    float theta = ((float)rand() / (RAND_MAX)) * (M_PI * 2.0);
+    float dTheta = 2 * M_PI / (numPoints - 1);
+
+    for (int j = 0; j < numPoints; j++)
+    {
+        float r = (rand() % 61) + 20;
+        float dx = r * cos(theta);
+        float dy = r * sin(theta);
+        m_A(0, j) = m_centerCoordinate.x + dx;
+        m_A(1, j) = m_centerCoordinate.y + dy;
+        theta += dTheta;
+    }
+}
+
+void Particle::draw(RenderTarget& target, RenderStates states) const
+{
+    VertexArray lines(TriangleFan, numPoints + 1);
+    
+    Vector2f center(target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane));
+
+    lines[0].position = center;
+    lines[0].color = m_color1;
+
+    for (int j = 1; j <= m_numPoints; j++)
+    {
+        lines[j].position = target.mapCoordsToPixel
+    }
 }
