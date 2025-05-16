@@ -1,7 +1,7 @@
 #include "Engine.h"
 #include "Particle.h"
 using namespace sf;
-using namespace st;
+using namespace std;
 
 Engine::Engine()
 {
@@ -10,6 +10,8 @@ Engine::Engine()
     resolution.y = VideoMode::getDesktopMode().height;
 
     m_Window.create(VideoMode(resolution.x, resolution.y), "Particles!", Style::Fullscreen);
+    //m_Window.create(VideoMode(1920, 1080), "Particles", Style::Fullscreen);
+    
 }
 
 void Engine::run()
@@ -24,10 +26,8 @@ void Engine::run()
 
     while(m_Window.isOpen())
     {
-        Time dt= clock.restart();
-        m_GameTimeTotal += dt;
-
-        float dtAsSeconds = dt.dtAsSeconds();
+        Time dt = clock.restart();
+        float dtAsSeconds = dt.asSeconds();
         
         input();
         update(dtAsSeconds);
@@ -55,8 +55,10 @@ void Engine::input()
                 for (int i = 0; i < 5; i++)
                 {
                     int numPoints = (rand() % 26) + 25;
-                    Particle p(m_Window, numPoints, )
+                    Particle p(m_Window, numPoints, Vector2i(event.mouseButton.x, event.mouseButton.y));
+                    m_particles.push_back(p);
                 }
+                
             }
         }
     }
@@ -64,7 +66,7 @@ void Engine::input()
 
 void Engine::update(float dtAsSeconds)
 {
-    for (int i = 0; i < m_particles.size();)
+    for (size_t i = 0; i < m_particles.size();)
     {
         if (m_particles[i].getTTL() > 0.0) // if getttl() > 0.0
         {
@@ -84,7 +86,7 @@ void Engine::draw()
 {
     m_Window.clear();
     ///loop through each Particle in m_particles
-    for (int i = 0; i < m_particles.size(); i++)
+    for (size_t i = 0; i < m_particles.size(); i++)
     {
         m_Window.draw(m_particles[i]);
     }
