@@ -191,6 +191,52 @@ void Particle::draw(RenderTarget& target, RenderStates states) const
 
     for (int j = 1; j <= m_numPoints; j++)
     {
-        lines[j].position = target.mapCoordsToPixel
+        lines[j].position = (target.mapCoordsToPixel(m_A(j - 1)), m_cartesianPlane)
+        lines[j].color = m_color2;
     }
+    target.draw(lines);
+}
+
+void Particle::update(float dt)
+{
+    m_ttl -= dt;
+    rotate(dt * m_radiansPerSec);
+    scale(SCALE);
+
+    float dx, dy;
+    dx = m_vx * dt;
+    m_vy -= G * dt;
+    dy = m_vy * dt;
+    translate(dx, dy);
+}
+
+void Particle::translate(double xShift, double yShift)
+{
+    TranslationMatrix T(xShift, yShift);
+    m_A = T + m_A; 
+
+    m_centerCoordinate.x += xShift;
+    m_centerCoordinate.y += yShift;
+}
+
+void rotate(double theta)
+{
+    Vector2f temp = m_centerCoordinate;
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
+
+    RotationMatrix R(theta);
+    m_A = R * m_A;
+
+    translate(temp.x, temp.y);
+}
+
+void scale(double c)
+{
+    Vector2f temp = m_centerCoordinate;
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
+    
+    ScalingMatrix S(c);
+    m_A = S * m_A;
+
+    translate(temp.x, temp.y);
 }

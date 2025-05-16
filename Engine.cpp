@@ -1,4 +1,7 @@
 #include "Engine.h"
+#include "Particle.h"
+using namespace sf;
+using namespace st;
 
 Engine::Engine()
 {
@@ -15,7 +18,7 @@ void Engine::run()
 
     //Time dt= clock.restart();
     cout << "Starting Particle unit tests..." << endl;
-    Particle p (m_Window, 4, { (int)m_Window.getSize().x / 2. (int)m_Window.getSize().y / 2 });
+    Particle p(m_Window, 4, { (int)m_Window.getSize().x / 2, (int)m_Window.getSize().y / 2 });
     p.unitTests();
     cout << "Unit tests complete. Starting engine..." << endl;
 
@@ -49,11 +52,10 @@ void Engine::input()
             if (event.mouseButton.button == Mouse::Left)//create loop to construct 5 particles
             {
                 cout << "Left Mouse Button was pressed" << endl;
-                cout << "mouse x: " << event.mouseButton.x << endl;
-                cout << "mouse y: " << event.mouseButton.y << endl;
-                for (int i = 0; i < numPoints; i++)
+                for (int i = 0; i < 5; i++)
                 {
-                    m_particles.push_back(vector(event.mouseButton.x, event.mouseButton.y));
+                    int numPoints = (rand() % 26) + 25;
+                    Particle p(m_Window, numPoints, )
                 }
             }
         }
@@ -62,7 +64,7 @@ void Engine::input()
 
 void Engine::update(float dtAsSeconds)
 {
-    for (int i = 0; i < m_particles.size())
+    for (int i = 0; i < m_particles.size();)
     {
         if (m_particles[i].getTTL() > 0.0) // if getttl() > 0.0
         {
